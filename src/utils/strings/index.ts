@@ -1,0 +1,35 @@
+export default {
+  dashboard_screen: 'Dashboard',
+  home_screen: 'Home',
+  watch_screen: 'Watch',
+  library_screen: 'Media Library',
+  more_screen: 'More',
+  detail_screen: 'Detail',
+  user_message: 'Please add some categories first',
+  bottom_tab: 'bottom tab',
+  date_text: ' In Theaters',
+  get_tickets: 'Get Tickets',
+  watch_trailer: 'Watch Trailer',
+  search_text: 'TV shows, movies and more',
+  no_text: 'No Results Found',
+  signup_screen: 'Signup',
+  back: 'Back',
+  sign_up: 'Sign up',
+  create_account: 'Create new \n account',
+  list_text: 'Top Upcoming',
+  watch_now: 'Watch Now',
+  search_placeholder: 'Looking for shows',
+  dummy_content:
+    'Try and enjoy all the features of the app \n completely free for 7 days',
+};
+
+export const MOCKDATA = [
+  'Movie',
+  'Series',
+  'Animation',
+  'Documentary',
+  'Action',
+  'Comedy',
+  'Drama',
+  'Fiction',
+];
