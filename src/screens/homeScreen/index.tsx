@@ -1,3 +1,4 @@
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   Image,
@@ -6,7 +7,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
 import {styles} from './styles';
 //ASSET ICONs
 import userIcon from '../../assets/icon/user.png';
@@ -22,6 +22,7 @@ import strings, {MOCKDATA} from '../../utils/strings';
 import HorizontalCard from '../../components/horizontalCard/horizontalCard';
 import Card from '../../components/cardItem/cardItem';
 import InputText from '../../components/textInput/input';
+import {ENDPOINTS, METHODS} from '../../utils/apiService/endPoints';
 
 const HomeScreen = ({navigation}: PropsType) => {
   const [selectedCat, setSelectedCat] = useState(0);
@@ -37,8 +38,8 @@ const HomeScreen = ({navigation}: PropsType) => {
 
   //search functionality
   const onSearchPress = () => {
-    const filtered = movieList.filter((item: item) =>
-      item?.title.toLowerCase().includes(searchValue.toLowerCase()),
+    const filtered = movieList.filter((data: item) =>
+      data?.title.toLowerCase().includes(searchValue.toLowerCase()),
     );
     setSeachList(filtered);
     setSearchText(searchValue);
@@ -50,19 +51,23 @@ const HomeScreen = ({navigation}: PropsType) => {
       setSearchText('');
     }
   };
+  
 
   // api call to get the movies List
   const FetchMovies = async () => {
-    const res = await APIHANDLER('GET', '/upcoming');
-    const nowPlayingRes = await APIHANDLER('GET', '/now_playing');
-    if (nowPlayingRes?.data) {
-      const {results} = nowPlayingRes.data;
-      setNowPlayingList(results);
-    }
-    if (res?.data) {
-      const {results} = res?.data;
-      setMovieList(results);
-    }
+    Promise.all([
+      APIHANDLER(METHODS.GET, ENDPOINTS.upComingMovies),
+      APIHANDLER(METHODS.GET, ENDPOINTS.nowPlayingMovies),
+    ])
+      .then(response => {
+        const {results: dataUpcoming} = response[0].data;
+        const {results: dataNowPlaying} = response[1].data;
+        setNowPlayingList(dataNowPlaying);
+        setMovieList(dataUpcoming);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   //here is the Flatlist header component
@@ -99,15 +104,15 @@ const HomeScreen = ({navigation}: PropsType) => {
 
   // Category redner item
   //the filter functionality is not implemented I haven't found any API for that so I'm using mock data
-  const CategoryList = (item: {item: string; index: number}) => {
+  const CategoryList = (val: {item: string; index: number}) => {
     return (
       <TouchableOpacity
-        onPress={() => setSelectedCat(item?.index)}
+        onPress={() => setSelectedCat(val?.index)}
         style={[
           styles.catListContainer,
           {
             backgroundColor:
-              selectedCat === item?.index
+              selectedCat === val?.index
                 ? Colors.primaryColors.blue
                 : Colors.monochromeColors.white,
           },
@@ -115,11 +120,11 @@ const HomeScreen = ({navigation}: PropsType) => {
         <Text
           style={{
             color:
-              selectedCat === item?.index
+              selectedCat === val?.index
                 ? Colors.monochromeColors.white
                 : Colors.monochromeColors.black,
           }}>
-          {item.item}
+          {val.item}
         </Text>
       </TouchableOpacity>
     );
@@ -159,8 +164,8 @@ const HomeScreen = ({navigation}: PropsType) => {
           ListHeaderComponent={ListHeaderComponent()}
           data={searchText.length > 0 ? searchList : movieList}
           showsHorizontalScrollIndicator={false}
-          renderItem={(item: cardItemType) => (
-            <Card navigation={navigation} item={item?.item} />
+          renderItem={(element: cardItemType) => (
+            <Card navigation={navigation} item={element?.item} />
           )}
         />
       </View>

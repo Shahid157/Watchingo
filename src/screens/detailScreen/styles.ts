@@ -5,6 +5,7 @@ import {HP, WP} from '../../utils/responsive/responsive';
 const color = AppConfig();
 export const styles = StyleSheet.create({
   subContainer: {flex: 0.5, paddingHorizontal: 20},
+  container: {flex: 1},
   dateText: {
     textAlign: 'center',
     color: color.monochromeColors.disabled,

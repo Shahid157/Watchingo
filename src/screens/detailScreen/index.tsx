@@ -28,14 +28,14 @@ const DetailScreen = ({navigation}: PropsType) => {
   const coverImage = imageBase + movieData?.poster_path;
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={styles.container}>
       <Header
         headerTitle={strings.detail_screen}
         onBackPress={() => navigation.goBack()}
         onSavePress={() => setSave(!save)}
         icon={save ? saveFill : saveIcon}
       />
-      <ScrollView style={{flex: 1}}>
+      <ScrollView style={styles.container}>
         <ImageBackground
           resizeMode="cover"
           imageStyle={styles.imageStyle}
